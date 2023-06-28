@@ -1,0 +1,32 @@
+
+#include<stdio.h>
+#include<conio.h>
+int main()
+{
+int at[20],bt[20], wt[20], tat[20], i, n;
+float waitavg, tatavg;int sum=0;
+
+printf("\nEnter the number of processes :");
+scanf("%d", &n);
+for(i=0;i<n;i++)
+{
+    printf("Enter AT and CPU time \n");
+    scanf("%d%d",&at[i],&bt[i]);
+
+        tat[i] = (sum +bt[i])-at[i];
+        sum+=bt[i];
+        wt[i]=tat[i]-bt[i];
+        waitavg+=wt[i];
+    tatavg+=tat[i];
+    
+
+}
+for (int i=0;i<n;i++)
+{
+    printf("Turn Around Time for process number %d:%d\n",(i+1),tat[i]);
+      printf("Wait time for process number %d:%d\n",(i+1),wt[i]);
+}
+printf("Average turn aroung time =%f\n",tatavg/n);
+printf("Average wait time =%f\n",waitavg/n);
+return 0;
+}
