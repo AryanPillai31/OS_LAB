@@ -1,0 +1,75 @@
+//PRE-EMPTIVE PRIORITY
+#include <stdio.h>
+#include <conio.h>
+
+int main() {
+    int n, i, bt[20], priority[20], at[20], j, temp, wt[20], tat[20], ct[20], time = 0, sum = 0, total_wt = 0, total_tat = 0;
+    float avgwt, avgtat;
+
+    printf("Enter number of processors: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        printf("Enter arrival time for p[%d]: ", i + 1);
+        scanf("%d", &at[i]);
+        printf("Enter burst time for p[%d]: ", i + 1);
+        scanf("%d", &bt[i]);
+        printf("Enter priority of p[%d]: ", i + 1);
+        scanf("%d", &priority[i]);
+    }
+
+    // Sort the processes based on arrival time
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - 1 - i; j++) {
+            if (at[j] > at[j + 1]) {
+                temp = at[j];
+                at[j] = at[j + 1];
+                at[j + 1] = temp;
+                temp = bt[j];
+                bt[j] = bt[j + 1];
+                bt[j + 1] = temp;
+                temp = priority[j];
+                priority[j] = priority[j + 1];
+                priority[j + 1] = temp;
+            }
+        }
+    }
+
+    // Preemptive Priority Scheduling
+    for (i = 0; i < n; i++) {
+        int min_priority = 9999, min_priority_idx = -1;
+        for (j = 0; j < n; j++) {
+            if (at[j] <= time && priority[j] < min_priority && bt[j] > 0) {
+                min_priority = priority[j];
+                min_priority_idx = j;
+            }
+        }
+
+        if (min_priority_idx == -1) {
+            time++;
+            i--;
+            continue;
+        }
+
+        bt[min_priority_idx]--;
+        time++;
+
+        if (bt[min_priority_idx] == 0) {
+            ct[min_priority_idx] = time;
+          wt[min_priority_idx] = time - at[min_priority_idx] - bt[min_priority_idx];
+tat[min_priority_idx] = time - at[min_priority_idx];
+            total_wt += wt[min_priority_idx];
+            total_tat += tat[min_priority_idx];
+        }
+    }
+
+    avgwt = (float)total_wt / n;
+    avgtat = (float)total_tat / n;
+
+    printf("\nTotal average waiting time: %f", avgwt);
+    printf("\nTotal average turnaround time: %f", avgtat);
+    getch();
+
+    return 0;
+}
+
