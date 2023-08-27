@@ -1,0 +1,196 @@
+#include <stdio.h>
+#include <stdlib.h>
+int queue[10];
+int n;
+int head;
+
+void sort(int arr[])
+{
+    int t;
+    for(int i=0;i<n-1;i++)
+    {
+        for(int j=0;j<n-i-1;j++)
+        {
+            if(arr[j+1]<arr[j])
+            {
+                t=arr[j+1];
+                arr[j+1]=arr[j];
+                arr[j]=t;
+            }
+        }
+    }
+    return ;
+}
+
+int fcfs()
+{
+    int move=0;
+    for (int i = 0; i < n; i++)
+    {
+        move+=abs(head-queue[i]);
+        head=queue[i];
+    }
+    return move;
+}
+int sstf()
+{
+    int move=0;
+    int vis[n];
+    for (int i = 0; i < n; i++)
+    {
+        vis[i]=0;
+    }
+    int count=0;
+    int u;
+    while(count!=n)
+    {
+        int min=999;
+        for(int i = 0; i < n; i++)
+        {
+            if(abs(head-queue[i])<min && vis[i]==0)
+            {
+                u=i;
+                min = abs(head-queue[i]);
+            }
+        }
+        vis[u]=1;
+        move+=abs(head-queue[u]);
+        head=queue[u];
+        count++;
+    }
+    return move;
+}
+int scan()
+{
+    int move=0;
+    int l,u,d;
+    printf("enter the lower and upper limit:\n");
+    scanf("%d%d",&l,&u);
+    printf("enter the direction:(1->UP and 0->down):\n");
+    scanf("%d",&d);
+    sort(queue);
+    if(d==0)
+    {
+        move=(head-l)+(queue[n-1]-l);
+    }
+    else
+    {
+        move=(u-head)+(u-queue[0]);
+    }
+    return move;
+}
+
+int look()
+{
+    int move=0;
+    int d;
+    printf("enter the direction:(1->UP and 0->down):\n");
+    scanf("%d",&d);
+    sort(queue);
+    if(d==1)
+    {
+        move=(queue[n-1]-head)+(queue[n-1]-queue[0]);
+    }
+    else
+    {
+        move=(head-queue[0])+(queue[n-1]-queue[0]);
+    }
+    return move;
+}
+
+int Clook()
+{
+    int move=0,d,u,count=0;
+    sort(queue);
+    printf("enter the direction:(1->UP and 0->down):\n");
+    scanf("%d",&d);
+    for (int i = 0; i < n; i++)
+    {
+        if(queue[i]>head){
+            u=i;
+            break;
+        }
+    }
+    if(d==1)
+    {
+        while(count!=n)
+        {
+            move+=abs(queue[u]-head);
+            head=queue[u];
+            u=(u+1)%n;
+            count++;
+        }
+    }
+    else
+    {
+        u--;
+        while(count!=n)
+        {
+            if(u<0)
+            {
+                u=n-1;
+            }
+            move+=abs(queue[u]-head);
+            head=queue[u];
+            u=(u-1)%n;
+            count++;
+        }
+    }
+    return move;
+}
+int Cscan()
+{
+    int move=0;
+    int l,u;
+    printf("enter the lower and upper limit:\n");
+    scanf("%d%d",&l,&u);
+    move=Clook();
+    move+=2*((u-queue[n-1])+(queue[0]-l));
+    return move;
+}
+
+int main()
+{
+    int ch;
+    printf("enter the number of the containers:\n");
+    scanf("%d",&n);
+    printf("enter the queue of addresses:\n");
+    for (int i = 0; i < n; i++)
+    {
+        scanf("%d",&queue[i]);
+    }
+    printf("enter the head location:\n");
+    scanf("%d",&head);
+    do
+    {
+        printf("1.FCFS\n2.SSTF\n3.SCAN\n4.LOOK\n5.C-LOOK\n6.C-SCAN\n7.EXIT\n");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:
+                printf("Disk Movement using fcfs Algorithm= %d",fcfs());
+                break;
+            case 2:
+                printf("Disk Movement using sstf Algorithm= %d",sstf());
+                break;
+            case 3:
+                printf("Disk Movement using scan Algorithm= %d",scan());
+                break;
+            case 4:
+                printf("Disk Movement using look Algorithm= %d",look());
+                break;
+            case 5:
+                printf("Disk Movement using C-look Algorithm= %d",Clook());
+                break;
+            case 6:
+                printf("Disk Movement using C-Scan Algorithm= %d",Cscan());
+                break;
+            case 7:
+                exit(0);
+            default:
+                printf("enter Valid choice!!!\n");
+                break;
+        }
+    }while(ch!=7);
+    return 0;
+}
